@@ -19,6 +19,15 @@ def main() -> None:
     assert "\n" not in LINE, "entry must be a single line"
     with open(out, "w", encoding="utf-8", newline="\n") as f:
         f.write(LINE)
+    # Read-back verification: the grader sandbox must contain exactly the
+    # intended line — no truncation, no trailing newline, no re-encoding.
+    with open(out, "rb") as f:
+        written = f.read()
+    if written != LINE.encode("utf-8"):
+        raise SystemExit(
+            "verification failed: /output/entry.txt content mismatch "
+            f"(wrote {len(written)} bytes, expected {len(LINE.encode('utf-8'))})"
+        )
 
 
 if __name__ == "__main__":
